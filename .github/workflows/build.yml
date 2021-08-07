@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: zmkfirmware/zmk-build-arm:2.4
+      image: zmkfirmware/zmk-build-arm:2.5
     name: Build
     steps:
       - name: Checkout
@@ -33,6 +33,27 @@ jobs:
         run: west update
       - name: West Zephyr export
         run: west zephyr-export
+        
+      - name: West Build (yasui)
+        uses: 'docker://zmkfirmware/zephyr-west-action-arm:latest'
+        id: west-build-yasui
+        with:
+          args: 'build "-s zmk/app -b yasui -- -DZMK_CONFIG=/github/workspace/config/"'
+      - name: YASUI DTS File
+        if: ${{ always() }}
+        run: cat -n build/zephyr/yasui.dts.pre.tmp
+      - name: Kconfig file
+        run: cat build/zephyr/.config | grep -v "^#" | grep -v "^$"
+      - name: Rename zmk.uf2
+        run: cp build/zephyr/zmk.uf2 yasui_nice_nano.uf2
+      - name: Archive (yasui)
+        uses: actions/upload-artifact@v2
+        with:
+          name: firmware
+          path: yasui_nice_nano.uf2
+ 
+        
+        
       - name: West Build (Corne Left)
         run: west build -s zmk/app -b nice_nano -- -DSHIELD=corne_left -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
       - name: Corne DTS File
