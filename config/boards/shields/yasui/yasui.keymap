@@ -9,12 +9,6 @@
 #define SYMBOLS 2
 #define EXTRAS 3
 
-sensor-bindings = <&inc_dec_kp C_VOL_UP C_VOL_DN>;
-
-
-
-
-
 / {
        keymap {
               compatible = "zmk,keymap";
