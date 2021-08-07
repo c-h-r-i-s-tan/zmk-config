@@ -39,7 +39,7 @@ jobs:
       - name: Yasui DTS File
         if: ${{ always() }}
         run: cat -n build/zephyr/nice_nano.dts.pre.tmp
-      - name: Yasui Kconfig file
+      - name: Kconfig file
         run: cat build/zephyr/.config | grep -v "^#" | grep -v "^$"
       - name: Rename zmk.uf2
         run: cp build/zephyr/zmk.uf2 yasui_nice_nano.uf2
